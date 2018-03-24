@@ -35,6 +35,8 @@ public abstract class Entity : MonoBehaviour {
     [SerializeField] protected float m_rotateSeconds = 1.0f;
     [SerializeField] protected float m_attackSeconds = 1.0f;
     [SerializeField] protected float m_dieSeconds = 1.0f;
+    [SerializeField] protected GameObject m_WeaponMesh;
+    [SerializeField] protected Transform m_WeaponAttackTransform;
     [SerializeField] protected AudioSource m_AudioSource;
     [SerializeField] protected AudioClip m_AttackSound1;
     [SerializeField] protected AudioClip m_AttackSound2;
@@ -47,6 +49,8 @@ public abstract class Entity : MonoBehaviour {
     private Vector2Int m_faceDirectionTarget;
     private Vector2Int m_attackTargetTile;
     protected float m_actionTimer = 0.0f;
+    protected Vector3 m_WeaponDefaultLocalPosition;
+    protected Quaternion m_WeaponDefaultLocalRotation;
 
     public Vector2Int GetTilePosition()
     {
@@ -140,9 +144,10 @@ public abstract class Entity : MonoBehaviour {
 
     private void MoveAnimate()
     {
+        float interpolationValue = 1.0f - (m_actionTimer / m_moveSeconds);
         Vector3 current = LevelData.TilePosToWorldVec3(m_tilePos);
         Vector3 target = LevelData.TilePosToWorldVec3(m_moveTargetPos);
-        transform.position = Vector3.Lerp(current, target, 1.0f - m_actionTimer);
+        transform.position = Vector3.Lerp(current, target, interpolationValue);
     }
 
     protected void Rotate(TurnDirection direction)
@@ -157,11 +162,12 @@ public abstract class Entity : MonoBehaviour {
 
     private void RotateAnimate()
     {
+        float interpolationValue = 1.0f - (m_actionTimer / m_rotateSeconds);
         Vector3 currentDirection = new Vector3(m_faceDirection.x, 0, m_faceDirection.y);
         Vector3 targetDirection = new Vector3(m_faceDirectionTarget.x, 0, m_faceDirectionTarget.y);
         Quaternion currentRotation = Quaternion.LookRotation(currentDirection, Vector3.up);
         Quaternion targetRotation = Quaternion.LookRotation(targetDirection, Vector3.up);
-        transform.rotation = Quaternion.Slerp(currentRotation, targetRotation, 1.0f - m_actionTimer);
+        transform.rotation = Quaternion.Slerp(currentRotation, targetRotation, interpolationValue);
     }
 
     protected void Attack()
@@ -188,12 +194,30 @@ public abstract class Entity : MonoBehaviour {
         }
     }
 
+    protected void AttackAnimate()
+    {
+        if (m_WeaponMesh && m_WeaponAttackTransform)
+        {
+            if (m_actionTimer >= (m_attackSeconds / 2))
+            {
+                float interpolationValue = 1.0f - ((m_actionTimer - (m_attackSeconds / 2)) * 2) / m_attackSeconds;
+                m_WeaponMesh.transform.localPosition = Vector3.Lerp(m_WeaponDefaultLocalPosition, m_WeaponAttackTransform.localPosition, interpolationValue);
+                m_WeaponMesh.transform.localRotation = Quaternion.Slerp(m_WeaponDefaultLocalRotation, m_WeaponAttackTransform.localRotation, interpolationValue);
+            }
+            else
+            {
+                float interpolationValue = 1.0f - (m_actionTimer * 2) / m_attackSeconds;
+                m_WeaponMesh.transform.localPosition = Vector3.Lerp(m_WeaponAttackTransform.localPosition, m_WeaponDefaultLocalPosition, interpolationValue);
+                m_WeaponMesh.transform.localRotation = Quaternion.Slerp(m_WeaponAttackTransform.localRotation, m_WeaponDefaultLocalRotation, interpolationValue);
+            }
+        }
+    }
+
     protected virtual void Die()
     {
         m_AudioSource.PlayOneShot(m_DeathSound);
     }
 
-    protected abstract void AttackAnimate();
     protected abstract void DieAnimate();
     protected abstract void Dead();
 
@@ -204,6 +228,12 @@ public abstract class Entity : MonoBehaviour {
         transform.rotation = Quaternion.LookRotation(new Vector3(m_faceDirection.x, 0, m_faceDirection.y), Vector3.up);
 
         EntityRegister.RegisterEntity(this.gameObject);
+
+        if(m_WeaponMesh)
+        {
+            m_WeaponDefaultLocalPosition = m_WeaponMesh.transform.localPosition;
+            m_WeaponDefaultLocalRotation = m_WeaponMesh.transform.localRotation;
+        }
 	}
 	
 	// Update is called once per frame

@@ -6,28 +6,8 @@ using UnityEngine.UI;
 public class Megaskull : Entity {
     [SerializeField] private GameObject m_MegaskullMesh;
     [SerializeField] private GameObject m_MegaskullCounterText;
-    private Vector3 m_MegaskullMeshPositionDefault;
-    private Quaternion m_MegaskullMeshRotationDefault;
-    private Vector3 m_MegaskullMeshPositionAttack = new Vector3(-0.13f, 0.22f, 1.05f);
-    private Quaternion m_MegaskullMeshRotationAttack = Quaternion.Euler(8.59f, -5.5f, -9.28f);
     private Vector2Int m_lastKnownPlayerPos = new Vector2Int(-1, -1);
     private float m_waitSeconds = 2.0f;
-
-    protected override void AttackAnimate()
-    {
-        if (m_actionTimer >= (m_attackSeconds / 2))
-        {
-            float interpolationValue = 1.0f - ((m_actionTimer - (m_attackSeconds / 2)) * 2) / m_attackSeconds;
-            m_MegaskullMesh.transform.localPosition = Vector3.Lerp(m_MegaskullMeshPositionDefault, m_MegaskullMeshPositionAttack, interpolationValue);
-            m_MegaskullMesh.transform.localRotation = Quaternion.Slerp(m_MegaskullMeshRotationDefault, m_MegaskullMeshRotationAttack, interpolationValue);
-        }
-        else
-        {
-            float interpolationValue = 1.0f - (m_actionTimer * 2) / m_attackSeconds;
-            m_MegaskullMesh.transform.localPosition = Vector3.Lerp(m_MegaskullMeshPositionAttack, m_MegaskullMeshPositionDefault, interpolationValue);
-            m_MegaskullMesh.transform.localRotation = Quaternion.Slerp(m_MegaskullMeshRotationAttack, m_MegaskullMeshRotationDefault, interpolationValue);
-        }
-    }
 
     protected override void Die()
     {
@@ -43,8 +23,9 @@ public class Megaskull : Entity {
 
     protected override void DieAnimate()
     {
+        float interpolationValue = m_actionTimer / m_dieSeconds;
         Vector3 scale = m_MegaskullMesh.transform.localScale;
-        scale.y = m_actionTimer;
+        scale.y = interpolationValue;
         m_MegaskullMesh.transform.localScale = scale;
     }
 
@@ -68,9 +49,6 @@ public class Megaskull : Entity {
             ++count;
             megaskullCounter.text = count.ToString();
         }
-
-        m_MegaskullMeshPositionDefault = m_MegaskullMesh.transform.localPosition;
-        m_MegaskullMeshRotationDefault = m_MegaskullMesh.transform.localRotation;
 	}
 	
 	// Update is called once per frame

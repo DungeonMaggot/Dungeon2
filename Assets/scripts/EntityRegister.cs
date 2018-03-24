@@ -15,8 +15,6 @@ public class EntityRegister : MonoBehaviour {
             if(entity == m_Entities[entityIndex])
             {
                 m_TileReservations[entityIndex] = tilePos;
-                Debug.Log("Reserved:");
-                Debug.Log(tilePos);
             }
         }
     }
@@ -27,8 +25,6 @@ public class EntityRegister : MonoBehaviour {
         {
             if (entity == m_Entities[entityIndex])
             {
-                Debug.Log("Cleared:");
-                Debug.Log(entity);
                 ClearTileReservation(entityIndex);
             }
         }
