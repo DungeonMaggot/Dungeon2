@@ -111,7 +111,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1585456044909918}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4439503919335302}
@@ -195,9 +195,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_gameManagerReference: {fileID: 0}
-  m_tilePos: {x: 2, y: 17}
+  m_tilePos: {x: 0, y: 0}
   m_facingDirection: {x: 0, y: 1}
   m_doorMesh: {fileID: 1587377230032822}
   m_doorOpenTransform: {fileID: 4680282519343488}
-  m_moveSeconds: 2
-  m_passableThreshold: 0.7
+  m_moveSeconds: 1.5
+  m_passableThreshold: 0.5

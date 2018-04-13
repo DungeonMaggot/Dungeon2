@@ -221,11 +221,9 @@ public class GameManager : MonoBehaviour {
             Door door = m_entities[entityIndex].GetComponent(typeof(Door)) as Door;
             if (door)
             {
-                Debug.Log("Checkin door " + door);
                 if( (pos == door.GetTilePosition() && dir == door.GetFacingDirection()) ||
                     (pos == door.GetNeighbouringTile() && dir == Vector2Int.Scale(door.GetFacingDirection(), new Vector2Int(-1, -1))) )
                 {
-                    Debug.Log("It's movin!");
                     door.Toggle();
                 }
             }

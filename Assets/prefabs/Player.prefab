@@ -519,7 +519,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_gameManagerReference: {fileID: 0}
   m_tilePos: {x: 0, y: 0}
-  m_faceDirection: {x: 0, y: 1}
+  m_facingDirection: {x: 0, y: 1}
   m_hitpoints: 10
   m_damage: 1
   m_moveSeconds: 0.8

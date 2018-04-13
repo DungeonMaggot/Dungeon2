@@ -12,8 +12,8 @@ public enum DoorMovement
 public class Door : Entity {
     [SerializeField] protected GameObject m_doorMesh;
     [SerializeField] protected Transform m_doorOpenTransform;
-    [SerializeField] protected float m_moveSeconds = 2.0f;
-    [SerializeField] protected float m_passableThreshold = 0.7f;
+    [SerializeField] protected float m_moveSeconds;
+    [SerializeField] protected float m_passableThreshold;
 
     protected Vector3 m_doorOpenLocalPos;
     protected Vector3 m_doorClosedLocalPos;
@@ -22,7 +22,7 @@ public class Door : Entity {
 
     public bool IsPassable()
     {
-        return (m_open >= m_passableThreshold);
+        return (m_doorMovement != DoorMovement.Closing) && (m_open >= m_passableThreshold);
     }
 
     public Vector2Int GetNeighbouringTile()
@@ -32,12 +32,12 @@ public class Door : Entity {
 
     public bool IsOpen()
     {
-        return (m_open <= 0.0f);
+        return !IsClosed();
     }
 
     public bool IsClosed()
     {
-        return !IsOpen();
+        return (m_open <= 0.0f);
     }
 
     public void Open()
@@ -52,13 +52,27 @@ public class Door : Entity {
 
     public void Toggle()
     {
-        if(m_doorMovement == DoorMovement.Opening)
+        if (m_doorMovement == DoorMovement.None)
         {
-            Close();
+            if(IsOpen())
+            {
+                Close();
+            }
+            else
+            {
+                Open();
+            }
         }
-        else if(m_doorMovement == DoorMovement.Closing)
+        else
         {
-            Open();
+            if (m_doorMovement == DoorMovement.Opening)
+            {
+                Close();
+            }
+            else // closing
+            {
+                Open();
+            }
         }
     }
 
@@ -70,7 +84,15 @@ public class Door : Entity {
         }
         else if(desiredMovement != m_doorMovement)
         {
-            m_actionTimer = m_moveSeconds;
+            if(desiredMovement == DoorMovement.Opening)
+            {
+                m_actionTimer = (1.0f - m_open) * m_moveSeconds;
+            }
+            else if (desiredMovement == DoorMovement.Closing)
+            {
+                m_actionTimer = m_open * m_moveSeconds;
+            }
+            m_doorMovement = desiredMovement;
         }
     }
 
@@ -105,10 +127,20 @@ public class Door : Entity {
         {
             if (m_actionDone)
             {
+                if (m_doorMovement == DoorMovement.Opening)
+                {
+                    m_open = 1.0f;
+                }
+                else // has been closing
+                {
+                    m_open = 0.0f;
+                }
+
                 m_doorMovement = DoorMovement.None;
             }
             else
             {
+                Debug.Log("Animate...(" + m_actionTimer + ")");
                 AnimateMove();
             }
         }
