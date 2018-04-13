@@ -57,7 +57,7 @@ public class Megaskull : Entity {
 
         if (m_currentAction == EntityActions.Idle)
         {
-            Player player = EntityRegister.LookToFindPlayer(m_tilePos, m_faceDirection);
+            Player player = m_gameManagerReference.LookToFindPlayer(m_tilePos, m_faceDirection);
             if (player && player.IsAlive())
             {
                 m_actionTimer = 0.0f;
@@ -93,7 +93,7 @@ public class Megaskull : Entity {
                         {
                             Rotate(TurnDirection.Right);
                         }
-                        if (LevelData.IsWalkable(m_tilePos + m_faceDirection))
+                        if (m_gameManagerReference.Level().IsWalkable(m_tilePos + m_faceDirection))
                         {
                             m_actionTimer = m_waitSeconds;
                         }

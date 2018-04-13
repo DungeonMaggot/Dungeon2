@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class EntityRegister : MonoBehaviour {
-
+    /*
     private static GameObject[] m_Entities = new GameObject[10];
     private static Vector2Int[] m_TileReservations = new Vector2Int[10];
     private static int m_EntityCount = 0;
@@ -32,8 +32,15 @@ public class EntityRegister : MonoBehaviour {
 
     public static void ClearTileReservation(int index)
     {
-        Debug.Log(m_TileReservations[index]);
         m_TileReservations[index] = new Vector2Int(-1, -1);
+    }
+
+    public static void ClearAllTileReservations()
+    {
+        for (int reservationIndex = 0; reservationIndex < m_EntityCount; ++reservationIndex)
+        {
+            ClearTileReservation(reservationIndex);
+        }
     }
 
     public static void DamageEntityOnTile(Vector2Int attackTilePos, int hitpoints)
@@ -59,7 +66,7 @@ public class EntityRegister : MonoBehaviour {
             {
                 result = true;
             }
-            if(tilePos == m_TileReservations[entityIndex])
+            if (tilePos == m_TileReservations[entityIndex])
             {
                 result = true;
             }
@@ -131,14 +138,28 @@ public class EntityRegister : MonoBehaviour {
 
 	// Use this for initialization
 	static void Start () {
-		for(int reservationIndex = 0; reservationIndex < m_EntityCount; ++reservationIndex)
+        Debug.Log("HHAAAAAALLOOOOOOOO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        Debug.Log("HHAAAAAALLOOOOOOOO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        Debug.Log("HHAAAAAALLOOOOOOOO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        Debug.Log("HHAAAAAALLOOOOOOOO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        Debug.Log("HHAAAAAALLOOOOOOOO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        Debug.Log("HHAAAAAALLOOOOOOOO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        Debug.Log("HHAAAAAALLOOOOOOOO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        Debug.Log("HHAAAAAALLOOOOOOOO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        for (int reservationIndex = 0; reservationIndex < m_EntityCount; ++reservationIndex)
         {
             ClearTileReservation(reservationIndex);
         }
-	}
+
+        for (int reservationIndex = 0; reservationIndex < m_EntityCount; ++reservationIndex)
+        {
+            Debug.Log("Start - res index " + reservationIndex + " is " + m_TileReservations[reservationIndex]);
+        }
+    }
 	
 	// Update is called once per frame
 	void Update () {
 		
 	}
+    */
 }

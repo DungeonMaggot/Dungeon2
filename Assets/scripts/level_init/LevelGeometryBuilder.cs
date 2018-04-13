@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelBuilder : MonoBehaviour {
+public class LevelGeometryBuilder : MonoBehaviour {
     [SerializeField] private GameObject m_FloorMesh;
     [SerializeField] private GameObject m_CeilingMesh;
     [SerializeField] private GameObject m_WallMesh;
@@ -10,10 +10,10 @@ public class LevelBuilder : MonoBehaviour {
     private const int m_NumberOfPropVariants = 13;
     [SerializeField] private GameObject[] m_PropMeshes = new GameObject[m_NumberOfPropVariants];
     
-    void Awake()
+    public void Build(LevelLayout inputLayout)
     {
-        int levelWidth = LevelData.GetLevelWidth();
-        int levelHeight = LevelData.GetLevelHeight();
+        int levelWidth = inputLayout.GetWidth();
+        int levelHeight = inputLayout.GetHeight();
 
         for (int y = 0; y < levelHeight; ++y)
         {
@@ -21,23 +21,23 @@ public class LevelBuilder : MonoBehaviour {
             {
                 Vector2Int tilePos = new Vector2Int(x, y);
 
-                if (LevelData.IsWalkable(tilePos))
+                if (inputLayout.IsWalkable(tilePos))
                 {
-                    Vector3 worldPos = LevelData.TilePosToWorldVec3(tilePos);
+                    Vector3 worldPos = LevelLayout.TilePosToWorldVec3(tilePos);
                     GameObject floorMeshClone = (GameObject)Instantiate(m_FloorMesh, worldPos, Quaternion.identity);
                     GameObject ceilingMeshClone = (GameObject)Instantiate(m_CeilingMesh, worldPos, Quaternion.identity);
 
                     // check neighbours
 
                     // west
-                    if (!LevelData.IsWalkable(new Vector2Int(tilePos.x - 1, tilePos.y)))
+                    if (!inputLayout.IsWalkable(new Vector2Int(tilePos.x - 1, tilePos.y)))
                     {
                         float angle = 90.0f;
                         GameObject wallMeshClone = (GameObject)Instantiate(m_WallMesh, worldPos, Quaternion.AngleAxis(angle, Vector3.up));
                         GameObject columnMeshClone = (GameObject)Instantiate(m_ColumnMesh, worldPos, Quaternion.AngleAxis(angle, Vector3.up));
                     }
 
-                    if (!LevelData.IsWalkable(new Vector2Int(tilePos.x + 1, tilePos.y)))
+                    if (!inputLayout.IsWalkable(new Vector2Int(tilePos.x + 1, tilePos.y)))
                     {
                         // east
                         float angle = 270.0f;
@@ -46,7 +46,7 @@ public class LevelBuilder : MonoBehaviour {
                     }
 
                     // north
-                    if (!LevelData.IsWalkable(new Vector2Int(tilePos.x, tilePos.y + 1)))
+                    if (!inputLayout.IsWalkable(new Vector2Int(tilePos.x, tilePos.y + 1)))
                     {
                         float angle = 180.0f;
                         GameObject wallMeshClone = (GameObject)Instantiate(m_WallMesh, worldPos, Quaternion.AngleAxis(angle, Vector3.up));
@@ -54,7 +54,7 @@ public class LevelBuilder : MonoBehaviour {
                     }
 
                     // south
-                    if (!LevelData.IsWalkable(new Vector2Int(tilePos.x, tilePos.y - 1)))
+                    if (!inputLayout.IsWalkable(new Vector2Int(tilePos.x, tilePos.y - 1)))
                     {
                         float angle = 0.0f;
                         GameObject wallMeshClone = (GameObject)Instantiate(m_WallMesh, worldPos, Quaternion.AngleAxis(angle, Vector3.up));

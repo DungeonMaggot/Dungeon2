@@ -517,7 +517,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b7f0215392256f43b80bdd01b5af163, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_tilePos: {x: 2, y: 13}
+  m_gameManagerReference: {fileID: 0}
+  m_tilePos: {x: 0, y: 0}
   m_faceDirection: {x: 0, y: 1}
   m_hitpoints: 10
   m_damage: 1

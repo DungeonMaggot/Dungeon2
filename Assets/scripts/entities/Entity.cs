@@ -27,6 +27,7 @@ public enum TurnDirection
 }
 
 public abstract class Entity : MonoBehaviour {
+    [SerializeField] protected GameManager m_gameManagerReference;
     [SerializeField] protected Vector2Int m_tilePos = new Vector2Int(0, 0);
     [SerializeField] protected Vector2Int m_faceDirection = new Vector2Int(0, 1);
     [SerializeField] protected int m_hitpoints = 3;
@@ -132,12 +133,16 @@ public abstract class Entity : MonoBehaviour {
                     } break;
             }
             m_moveTargetPos = m_tilePos + moveDirection;
-            if (LevelData.IsWalkable(m_moveTargetPos) && !EntityRegister.IsTileOccupied(m_moveTargetPos))
+
+            Debug.Log("IsWalkable (" + m_moveTargetPos + "): " + m_gameManagerReference.Level().IsWalkable(m_moveTargetPos) +
+                        ", IsOccupied (" + m_moveTargetPos + "): " + m_gameManagerReference.IsTileOccupied(m_moveTargetPos));
+
+            if (m_gameManagerReference.Level().IsWalkable(m_moveTargetPos) && !m_gameManagerReference.IsTileOccupied(m_moveTargetPos))
             {
                 m_currentAction = EntityActions.Move;
                 m_actionTimer = m_moveSeconds;
                 m_AudioSource.PlayOneShot(m_WalkSound);
-                EntityRegister.ReserveTilePos(this.gameObject, m_moveTargetPos);
+                m_gameManagerReference.ReserveTilePos(this.gameObject, m_moveTargetPos);
             }
         }
     }
@@ -145,8 +150,8 @@ public abstract class Entity : MonoBehaviour {
     private void MoveAnimate()
     {
         float interpolationValue = 1.0f - (m_actionTimer / m_moveSeconds);
-        Vector3 current = LevelData.TilePosToWorldVec3(m_tilePos);
-        Vector3 target = LevelData.TilePosToWorldVec3(m_moveTargetPos);
+        Vector3 current = LevelLayout.TilePosToWorldVec3(m_tilePos);
+        Vector3 target = LevelLayout.TilePosToWorldVec3(m_moveTargetPos);
         transform.position = Vector3.Lerp(current, target, interpolationValue);
     }
 
@@ -224,10 +229,10 @@ public abstract class Entity : MonoBehaviour {
 	// Use this for initialization
 	public virtual void Start ()
     {
-        transform.position = LevelData.TilePosToWorldVec3(m_tilePos);
+        transform.position = LevelLayout.TilePosToWorldVec3(m_tilePos);
         transform.rotation = Quaternion.LookRotation(new Vector3(m_faceDirection.x, 0, m_faceDirection.y), Vector3.up);
 
-        EntityRegister.RegisterEntity(this.gameObject);
+        m_gameManagerReference.RegisterEntity(this.gameObject);
 
         if(m_WeaponMesh)
         {
@@ -251,7 +256,7 @@ public abstract class Entity : MonoBehaviour {
                 if(done)
                 {
                     m_tilePos = m_moveTargetPos;
-                    EntityRegister.ClearTileReservation(this.gameObject);
+                        m_gameManagerReference.ClearTileReservation(this.gameObject);
                 }
             } break;
         case EntityActions.Rotate:
@@ -267,7 +272,7 @@ public abstract class Entity : MonoBehaviour {
                 AttackAnimate();
                 if(done)
                 {
-                    EntityRegister.DamageEntityOnTile(m_attackTargetTile, m_damage);
+                    m_gameManagerReference.DamageEntityOnTile(m_attackTargetTile, m_damage);
                 }
             } break;
         case EntityActions.Die:
