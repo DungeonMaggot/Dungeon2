@@ -25,6 +25,10 @@ public class GameManager : MonoBehaviour {
             m_entities[m_entityCount] = entity;
             ++m_entityCount;
         }
+        else
+        {
+            Debug.LogError("Entity register list is too small (" + m_maxEntities + "), could not register entity: " + entity);
+        }
     }
 
     //
@@ -49,6 +53,11 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    public void ClearTileReservation(int index)
+    {
+        m_tileReservations[index].Set(-1, -1);
+    }
+
     public void ClearTileReservation(GameObject entity)
     {
         for (int entityIndex = 0; entityIndex < m_entityCount; ++entityIndex)
@@ -60,14 +69,9 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    public void ClearTileReservation(int index)
-    {
-        m_tileReservations[index] = new Vector2Int(-1, -1);
-    }
-
     public void ClearAllTileReservations()
     {
-        for (int reservationIndex = 0; reservationIndex < m_entityCount; ++reservationIndex)
+        for (int reservationIndex = 0; reservationIndex < m_maxEntities; ++reservationIndex)
         {
             ClearTileReservation(reservationIndex);
         }
@@ -76,16 +80,24 @@ public class GameManager : MonoBehaviour {
     //
     // tile queries
     //
-    public bool IsTileOccupied(Vector2 tilePos)
+    public bool IsTileOccupied(Vector2Int tilePos)
     {
         bool result = false;
 
         for (int entityIndex = 0; entityIndex < m_entityCount; ++entityIndex)
         {
             Entity entity = m_entities[entityIndex].GetComponent(typeof(Entity)) as Entity;
-            if (tilePos == entity.GetTilePosition() && entity.IsAlive())
+            Character character = m_entities[entityIndex].GetComponent(typeof(Character)) as Character;
+            Door door = m_entities[entityIndex].GetComponent(typeof(Door)) as Door;
+            if (tilePos == entity.GetTilePosition())
             {
-                result = true;
+                if (!door)
+                {
+                    if (!character || character.IsAlive())
+                    {
+                        result = true;
+                    }
+                }
             }
             if (tilePos == m_tileReservations[entityIndex])
             {
@@ -96,14 +108,56 @@ public class GameManager : MonoBehaviour {
         return result;
     }
 
-    public void DamageEntityOnTile(Vector2Int attackTilePos, int hitpoints)
+    public bool IsMoveBlockedByDoor(Vector2Int originTilePos, Vector2Int destinationTilePos)
+    {
+        bool moveIsBlocked = false;
+
+        for (int entityIndex = 0; entityIndex < m_entityCount; ++entityIndex)
+        {
+            Door door = m_entities[entityIndex].GetComponent(typeof(Door)) as Door;
+            if (door && !door.IsPassable())
+            {
+                if( ((originTilePos == door.GetTilePosition())      && (destinationTilePos == door.GetNeighbouringTile())) ||
+                    ((originTilePos == door.GetNeighbouringTile())  && (destinationTilePos == door.GetTilePosition())) )
+                {
+                    moveIsBlocked = true;
+                }
+            }
+        }
+        return moveIsBlocked;
+    }
+
+    public bool IsMoveValid(Vector2Int originTilePos, Vector2Int destinationTilePos)
+    {
+        bool moveIsValid = true;
+
+        Vector2Int difference = destinationTilePos - originTilePos;
+        if(difference.magnitude != -1.0f && difference.magnitude != 1.0f)
+        {
+            moveIsValid = false;
+        }
+
+        if (moveIsValid)
+        {
+            moveIsValid = m_levelLayout.IsWalkable(destinationTilePos) && !IsTileOccupied(destinationTilePos);
+        }
+
+        if (moveIsValid)
+        {
+            moveIsValid = !IsMoveBlockedByDoor(originTilePos, destinationTilePos);
+        }
+
+        return moveIsValid;
+    }
+
+    public void DamageEntityOnTile(Vector2Int attackTilePos, Vector2Int attackDir, int hitpoints)
     {
         for (int entityIndex = 0; entityIndex < m_entityCount; ++entityIndex)
         {
             Entity entity = m_entities[entityIndex].GetComponent(typeof(Entity)) as Entity;
             if (attackTilePos == entity.GetTilePosition())
             {
-                entity.TakeDamage(hitpoints);
+                entity.TakeDamage(hitpoints, attackDir);
             }
         }
     }
@@ -158,6 +212,24 @@ public class GameManager : MonoBehaviour {
         }
 
         return result;
+    }
+
+    public void ContextualInteraction(Vector2Int pos, Vector2Int dir)
+    {
+        for (int entityIndex = 0; entityIndex < m_entityCount; ++entityIndex)
+        {
+            Door door = m_entities[entityIndex].GetComponent(typeof(Door)) as Door;
+            if (door)
+            {
+                Debug.Log("Checkin door " + door);
+                if( (pos == door.GetTilePosition() && dir == door.GetFacingDirection()) ||
+                    (pos == door.GetNeighbouringTile() && dir == Vector2Int.Scale(door.GetFacingDirection(), new Vector2Int(-1, -1))) )
+                {
+                    Debug.Log("It's movin!");
+                    door.Toggle();
+                }
+            }
+        }
     }
 
     private void Awake()

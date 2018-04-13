@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Player : Entity {
+public class Player : Character {
     [SerializeField] private GameObject m_Sword;
     [SerializeField] private GameObject m_HitpointsText;
 
@@ -21,15 +21,9 @@ public class Player : Entity {
     {
         Debug.Log("Player dead!");
     }
-
-	// Use this for initialization
-    public override void Start()
-    {
-        base.Start();
-	}
 	
 	// Update is called once per frame
-	public override void Update () {
+	protected override void Update () {
         base.Update();
         
         Text text = (Text)m_HitpointsText.GetComponent(typeof(Text));
@@ -40,33 +34,38 @@ public class Player : Entity {
 
         if(Input.GetButtonDown("StepForward"))
         {
-            base.Move(MoveDirection.Forward);
+            BeginMove(MoveDirection.Forward);
         }
         if (Input.GetButtonDown("StepBackward"))
         {
-            base.Move(MoveDirection.Backward);
+            BeginMove(MoveDirection.Backward);
         }
         if (Input.GetButtonDown("StepLeft"))
         {
-            base.Move(MoveDirection.Left);
+            BeginMove(MoveDirection.Left);
         }
         if (Input.GetButtonDown("StepRight"))
         {
-            base.Move(MoveDirection.Right);
+            BeginMove(MoveDirection.Right);
         }
 
         if(Input.GetButtonDown("TurnLeft"))
         {
-            base.Rotate(TurnDirection.Left);
+            BeginRotation(TurnDirection.Left);
         }
         if (Input.GetButtonDown("TurnRight"))
         {
-            base.Rotate(TurnDirection.Right);
+            BeginRotation(TurnDirection.Right);
         }
 
         if(Input.GetButtonDown("Attack"))
         {
-            base.Attack();
+            BeginAttack();
+        }
+
+        if(Input.GetButtonDown("Use"))
+        {
+            m_gameManagerReference.ContextualInteraction(m_tilePos, m_facingDirection);
         }
 	}
 }
