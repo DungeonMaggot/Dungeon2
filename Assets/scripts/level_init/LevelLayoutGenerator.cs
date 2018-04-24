@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//later use
 class Toolbeld
 {
     public Toolbeld()
@@ -114,6 +115,7 @@ class Cell
             last_vertex = new_vertex;
             new_vertex++;
         }
+        //conect end to path
         m_vertex_cell[m_vertex_cell.Count - 1].m_neighbors.Add(m_vertex_cell[last_vertex]);
         m_vertex_cell[last_vertex].m_neighbors.Add(m_vertex_cell[m_vertex_cell.Count - 1]);
 
@@ -182,8 +184,6 @@ class Map_abstracter
         Vector3Int currend_end;
 
         Vector2Int currend_amound_vertex_min_max = m_amound_vertex_min_max; //option for fariation?
-
-        // --KILL-- List<Vertex_info> nav_mesh = new List<Vertex_info>();
 
         //generating cells
         //if Z is an option add for loop  
@@ -377,6 +377,7 @@ class Map_builder
         }
 
         //fill map whit ways
+        //for everay cell
         for (int array_y = 0; array_y < m_size_cell_array.y; array_y++)
         {
             for (int array_x = 0; array_x < m_size_cell_array.x; array_x++)
@@ -385,15 +386,18 @@ class Map_builder
                 int amound_of_points = currend_cell.vertex_cell_getter().Count;
                 Vertex_info last_vertex = new Vertex_info(new Vector3Int(-1, -1, -1), false, false);
 
+                //for every point in cell
                 for (int i = 0; i < amound_of_points; i++)
                 {
                     Vertex_info currend_vertex = currend_cell.vertex_cell_getter()[i];
                     Vector3Int currend_position = currend_vertex.m_position;
 
+                    //for every Neighbros
                     for (int j = 0; j < currend_vertex.m_neighbors.Count; j++)
                     {
                         Vector3Int next_position = currend_vertex.m_neighbors[j].m_position;
 
+                        //no skip dobbels
                         if (next_position != last_vertex.m_position)
                         {
                             //filling the way left and rigth
@@ -426,7 +430,7 @@ class Map_builder
                                     currend_position.y += 1;
                                 }
                             }
-
+                            //remember last vertex
                             last_vertex = currend_vertex;
                         }
 
@@ -454,6 +458,7 @@ public class LevelLayoutGenerator : LevelLayoutInitializer {
     public override LevelLayout ProvideLevelLayout()
     {
         /*
+        // Andis example
         // BEGIN TEST - create simple level
         string layoutString =
             " + " +
@@ -466,12 +471,14 @@ public class LevelLayoutGenerator : LevelLayoutInitializer {
 
         Map_builder builder = new Map_builder(m_size_cell_array_, m_size_cell_, m_amound_vertex_min_max_);
         currend_map = builder.string_map_getter();
+
         string layoutString = "";
+        //convert List in to needed format
         for (int i = 0; i < currend_map.Count; i++)
         {
             layoutString += currend_map[i];
         }
-
+        //give result
         LevelLayout result = new LevelLayout(layoutString, m_size_cell_array_.x * m_size_cell_.x);
 
         return result;
