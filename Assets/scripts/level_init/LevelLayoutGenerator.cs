@@ -2,327 +2,319 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//later use
-class Toolbeld
+class Toolbelt
 {
-    public Toolbeld()
+    public Toolbelt()
     {
 
     }
-
-    public int int_of_list(List<int> set)//memo at me: lern Templates... c++ AND c#
+    public int rand_Int_of_List(List<int> set)//memo at me: learn Templates... c++ AND c#
     {
         int answer = set[Random.Range(0, set.Count - 1)];
         return answer;
     }
-
-    public Vertex_info Vertex_info_of_list(List<Vertex_info> set)//memo at me: lern Templates... c++ AND c#
+    public Vertex rand_Vertex_of_List(List<Vertex> set)//memo at me: learn Templates... c++ AND c#
     {
-        Vertex_info answer = set[Random.Range(0, set.Count - 1)];
+        Vertex answer = set[Random.Range(0, set.Count - 1)];
         return answer;
     }
 }
 
-class Vertex_info
+class Vertex
 {
-    public List<Vertex_info> m_neighbors;
-    public Vector3Int m_position;
+    public List<Vertex> m_neighbors;
+    public Vector2Int m_position;
     public bool m_start;
     public bool m_end;
 
-    public Vertex_info(Vector3Int position_, bool start_, bool end_)
+    public Vertex(Vector2Int position_, bool start_, bool end_)
     {
-        m_neighbors = new List<Vertex_info>();
+        m_neighbors = new List<Vertex>();
         m_position = position_;
 
         m_start = start_;
         m_end = end_;
     }
-    //--Getters--
-    //dosn´t make sense
-    //--Setters--
-    //dosn´t make sense
 }
 
-class Cell
+class Chunk
 {
-    // Positional Variables
-    //Origon of the Macro Cell
-    Vector3Int m_origon;
-    //Dimmension of Tiles in der Cell xyz
-    Vector3Int m_size_cell;
+    //Positional Variables
+    //Origin of the Macro Cell
+    Vector2Int m_origin;
+    //Dimension of Tiles in the Cell xyz
+    Vector2Int m_size_chunk;
     //Min Max of Vertex in a Cell
-    Vector2Int m_amound_vertex_min_max;
-    //entry from the cell bevor in this cell
-    Vector3Int m_start;
+    Vector2Int m_amount_vertex_min_max;
+    //entry from the cell before this chunk
+    Vector2Int m_entry_pos;
     //exit form this cell in the next
-    Vector3Int m_end;
-    //amound vertex of the generatishen
-    int m_amound_vertex;
+    Vector2Int m_exit_pos;
+    //amount vertex of the generation
+    int m_amount_vertex;
     //list of Vertex
-    List<Vertex_info> m_vertex_cell;
+    List<Vertex> m_vertex_in_chunk;
 
     // Default Constructor
-    public Cell(Vector3Int origon_, Vector3Int size_cell_, Vector3Int start_, Vector3Int end_, Vector2Int amound_vertex_min_max_)
+    public Chunk(Vector2Int origen_, Vector2Int size_chunk_, Vector2Int entry_pos_, Vector2Int exit_pos_, Vector2Int amount_vertex_min_max_)
     {
-        //if Z is needed: commend m_origon.z = 0; and m_tile.z = 0;
         //Ini Variables
-        m_origon = origon_;
-        m_origon.z = 0;
+        m_origin = origen_;
 
-        m_size_cell = size_cell_;
-        m_size_cell.z = 0;
+        m_size_chunk = size_chunk_;
 
-        m_start = start_;
+        m_entry_pos = entry_pos_;
 
-        m_end = end_;
+        m_exit_pos = exit_pos_;
 
-        m_amound_vertex_min_max = amound_vertex_min_max_;
+        m_amount_vertex_min_max = amount_vertex_min_max_;
 
-        m_amound_vertex = Random.Range(m_amound_vertex_min_max.x, m_amound_vertex_min_max.y);
+        m_amount_vertex = Random.Range(m_amount_vertex_min_max.x, m_amount_vertex_min_max.y);
 
-        m_vertex_cell = new List<Vertex_info>();
+        m_vertex_in_chunk = new List<Vertex>();
 
-        //add Start
-        m_vertex_cell.Add(new Vertex_info(m_start, true, false));
+        
 
-        //place the vertex in the Cell
-        for (int i = 0; i < m_amound_vertex; i++)
+        //place the vertex in the Chunk
+        for (int i = 0; i < m_amount_vertex; i++)
         {
+            //add Entry
+            if (i == 0)
+            {
+                m_vertex_in_chunk.Add(new Vertex(m_entry_pos, true, false));
+            }
+            //add Exit
+            if (i == m_amount_vertex - 1)
+            {
+
+                m_vertex_in_chunk.Add(new Vertex(m_exit_pos, false, true));
+            }
             //generating random XYZ
-            int rand_X = Random.Range(m_origon.x + 1, m_size_cell.x + m_origon.x - 1);
-            int rand_Y = Random.Range(m_origon.y + 1, m_size_cell.y + m_origon.y - 1);
-            //int rand_Z = Random.Range(m_origon.z, m_tile.z + m_origon.z); //in case of other use
-            int rand_Z = m_origon.z;
+            else
+            {
+                int rand_X = Random.Range(m_origin.x + 1, m_size_chunk.x + m_origin.x - 1);
+                int rand_Y = Random.Range(m_origin.y + 1, m_size_chunk.y + m_origin.y - 1);
 
-            Vector3Int position = new Vector3Int(rand_X, rand_Y, rand_Z);
-
-            m_vertex_cell.Add(new Vertex_info(position, false, false));
+                Vector2Int position = new Vector2Int(rand_X, rand_Y);
+                m_vertex_in_chunk.Add(new Vertex(position, false, false));
+            }
+            
         }
 
-        //add End
-        m_vertex_cell.Add(new Vertex_info(m_end, false, true));
-
-        //generateing Waymesh
+        //generating Way mesh
         int last_vertex = 0;
         int new_vertex = 1;
 
-        for (int i = 2; i < m_vertex_cell.Count; i++)
+        for (int i = 2; i < m_vertex_in_chunk.Count; i++)
         {
-            m_vertex_cell[last_vertex].m_neighbors.Add(m_vertex_cell[new_vertex]);
-            m_vertex_cell[new_vertex].m_neighbors.Add(m_vertex_cell[last_vertex]);
+            m_vertex_in_chunk[last_vertex].m_neighbors.Add(m_vertex_in_chunk[new_vertex]);
+            m_vertex_in_chunk[new_vertex].m_neighbors.Add(m_vertex_in_chunk[last_vertex]);
 
             last_vertex = new_vertex;
             new_vertex++;
         }
-        //conect end to path
-        m_vertex_cell[m_vertex_cell.Count - 1].m_neighbors.Add(m_vertex_cell[last_vertex]);
-        m_vertex_cell[last_vertex].m_neighbors.Add(m_vertex_cell[m_vertex_cell.Count - 1]);
+        //connect end to path
+        m_vertex_in_chunk[m_vertex_in_chunk.Count - 1].m_neighbors.Add(m_vertex_in_chunk[last_vertex]);
+        m_vertex_in_chunk[last_vertex].m_neighbors.Add(m_vertex_in_chunk[m_vertex_in_chunk.Count - 1]);
 
     }
 
     //--Getters--
-    public Vector2Int amound_vertex_min_maxsetter_getter()
+    public Vector2Int amount_vertex_min_max_getter()
     {
-        return m_amound_vertex_min_max;
+        return m_amount_vertex_min_max;
     }
-    public Vector3Int origon_getter()
+    public Vector2Int origin_getter()
     {
-        return m_origon;
+        return m_origin;
     }
-    public Vector3Int size_cell_getter()
+    public Vector2Int size_chunk_getter()
     {
-        return m_size_cell;
+        return m_size_chunk;
     }
-    public Vector3Int start_getter()
+    public Vector2Int entry_getter()
     {
-        return m_start;
+        return m_entry_pos;
     }
-    public Vector3Int end_getter()
+    public Vector2Int exit_getter()
     {
-        return m_end;
+        return m_exit_pos;
     }
-    public List<Vertex_info> vertex_cell_getter()
+    public List<Vertex> vertex_chunk_getter()
     {
-        return m_vertex_cell;
+        return m_vertex_in_chunk;
     }
-    //--Setters--
-    //dosn´t make sense
 }
 
-class Map_abstracter
+class Chunks_content_Manager
 {
 
-    Vector2Int m_size_cell_array;
+    Vector2Int m_size_chunk_array;
 
-    Vector3Int m_size_cell;
+    Vector2Int m_size_chunk;
 
-    Vector2Int m_amound_vertex_min_max;
+    Vector2Int m_amount_vertex_min_max;
 
-    List<Cell> map_cells;
+    List<Chunk> m_map_chunk;
 
-    int m_amound_tiels;
+    int m_amount_tiels_in_chunk;
 
-    public Map_abstracter(Vector2Int m_size_cell_array_, Vector3Int m_size_cell_, Vector2Int m_amound_vertex_min_max_)
+    public Chunks_content_Manager(Vector2Int m_size_chunk_array_, Vector2Int m_size_chunk_, Vector2Int m_amount_vertex_min_max_)
     {
         //Ini Variables
-        m_size_cell_array = m_size_cell_array_;
-        m_size_cell = m_size_cell_;
-        m_amound_vertex_min_max = m_amound_vertex_min_max_;
+        m_size_chunk_array = m_size_chunk_array_;
+        m_size_chunk = m_size_chunk_;
+        m_amount_vertex_min_max = m_amount_vertex_min_max_;
 
-        m_amound_tiels = m_size_cell_array.x * m_size_cell_array.y * m_size_cell.x * m_size_cell.y;
-
-        Toolbeld tools = new Toolbeld();
+        m_amount_tiels_in_chunk = m_size_chunk_array.x * m_size_chunk_array.y * m_size_chunk.x * m_size_chunk.y;
 
         //Working Variables
-        List<Vertex_info> room_map = new List<Vertex_info>();
-        map_cells = new List<Cell>();
+        List<Vertex> room_map = new List<Vertex>();
+        m_map_chunk = new List<Chunk>();
 
-        Vector3Int currend_origon;
-        Vector3Int currend_size_cell = m_size_cell;
-        Vector3Int currend_start;
-        Vector3Int currend_end;
+        Vector2Int current_origen;
+        Vector2Int current_size_chunk = m_size_chunk;
+        Vector2Int current_entry;
+        Vector2Int current_exit;
 
-        Vector2Int currend_amound_vertex_min_max = m_amound_vertex_min_max; //option for fariation?
+        Vector2Int current_amount_vertex_min_max = m_amount_vertex_min_max; //option for variation?
 
-        //generating cells
-        //if Z is an option add for loop  
-        for (int i = 0; i < m_size_cell_array.y; i++)//y
+        //generating chunks
+        for (int i = 0; i < m_size_chunk_array.y; i++)//y
         {
-            for (int j = 0; j < m_size_cell_array.x; j++)//x
+            for (int j = 0; j < m_size_chunk_array.x; j++)//x
             {
                 //define currend_origon
                 //memo at me Mathf.RoundToInt is doof... by .5 it gives back the even number
-                currend_origon = new Vector3Int(m_size_cell.x * j, m_size_cell.y * i, m_size_cell.z);
+                current_origen = new Vector2Int(m_size_chunk.x * j, m_size_chunk.y * i);
 
-                //define start and define end
-               
-                Vector3Int nord = new Vector3Int(   currend_origon.x + Mathf.RoundToInt(m_size_cell.x / 2),
-                                                    currend_origon.y,
-                                                    0);
+                // define Entry and define Exit of the Chunk
 
-                Vector3Int east = new Vector3Int(   currend_origon.x + m_size_cell.x,
-                                                    currend_origon.y + Mathf.RoundToInt(m_size_cell.y / 2),
-                                                    0);
+                // define entrance/exit tile candidates
+                Vector2Int nord_chunk_joint =       new Vector2Int(   current_origen.x + Mathf.RoundToInt((float)m_size_chunk.x / 2f),
+                                                    current_origen.y);
 
-                Vector3Int south = new Vector3Int(  currend_origon.x + Mathf.RoundToInt(m_size_cell.x / 2),
-                                                    currend_origon.y + m_size_cell.y,
-                                                    0);
+                Vector2Int east_chunk_joint =       new Vector2Int(   current_origen.x + m_size_chunk.x,
+                                                    current_origen.y + Mathf.RoundToInt((float)m_size_chunk.y / 2f));
 
-                Vector3Int west = new Vector3Int(   currend_origon.x,
-                                                    currend_origon.y + Mathf.RoundToInt(m_size_cell.y / 2),
-                                                    0);
+                Vector2Int south_chunk_joint =      new Vector2Int(  current_origen.x + Mathf.RoundToInt((float)m_size_chunk.x / 2f),
+                                                    current_origen.y + m_size_chunk.y);
 
-                //start uopper left corner
+                Vector2Int west_chunk_joint =       new Vector2Int(   current_origen.x,
+                                                    current_origen.y + Mathf.RoundToInt((float)m_size_chunk.y / 2f));
+
+                //upper left corner (start corner)
                 if (j == 0 && i == 0)
                 {
-                    currend_start = new Vector3Int(0, 0, 0);
+                    current_entry = new Vector2Int(0, 0);
 
-                    currend_end = east;
+                    current_exit = east_chunk_joint;
                 }
-                //all in the "middle"
-                else if (j < m_size_cell_array.x - 1 && j > 0)
+                //all chunks which are not on the x borders
+                else if (j < m_size_chunk_array.x - 1 && j > 0)
                 {
-                    currend_start = west;
+                    current_entry = west_chunk_joint;
 
-                    currend_end = east;
+                    current_exit = east_chunk_joint;
                 }
-                //all on the right and even
-                else if (j == m_size_cell_array.x - 1 && i % 2 == 0)
+                //all chunks on the right and have a even index
+                else if (j == m_size_chunk_array.x - 1 && i % 2 == 0)
                 {
-                    currend_start = west;
+                    current_entry = west_chunk_joint;
 
-                    currend_end = south;
+                    current_exit = south_chunk_joint;
                 }
-                // all on the right and odd 
-                else if (j == m_size_cell_array.x - 1 && i % 2 != 0)
+                // all chunks on the right and have a odd index
+                else if (j == m_size_chunk_array.x - 1 && i % 2 != 0)
                 {
-                    currend_start = nord;
+                    current_entry = nord_chunk_joint;
 
-                    currend_end = west;
+                    current_exit = west_chunk_joint;
                 }
-                //all on the left and even
+                //all chunks on the left and have a even index
                 else if (j == 0 && i % 2 == 0)
                 {
-                    currend_start = nord;
+                    current_entry = nord_chunk_joint;
 
-                    currend_end = east;
+                    current_exit = east_chunk_joint;
                 }
-                // all on the left and odd 
+                // all chunks on the left and have a odd index
                 else if (j == 0 && i % 2 != 0)
                 {
-                    currend_start = east;
+                    current_entry = east_chunk_joint;
 
-                    currend_end = south;
+                    current_exit = south_chunk_joint;
                 }
                 // 0 0 if fail
                 else
                 {
-                    currend_start = new Vector3Int(0, 0, 0);
+                    Debug.Log("Warning: indecisive Chunk/n" + " x: " + j + "/n y: " + i);
 
-                    currend_end = new Vector3Int(0, 0, 0);
+                    current_entry = new Vector2Int(0, 0);
+
+                    current_exit = new Vector2Int(0, 0);
                 }
-                //fill the Cell map
-                map_cells.Add(new Cell(currend_origon, currend_size_cell, currend_start, currend_end, currend_amound_vertex_min_max));
+                //fill the Chunk map
+                m_map_chunk.Add(new Chunk(current_origen, current_size_chunk, current_entry, current_exit, current_amount_vertex_min_max));
             }
 
         }
     }
 
     //--Getters--
-    public Vector2Int amound_vertex_min_maxsetter_getter()
+    public Vector2Int amount_vertex_min_maxsetter_getter()
     {
-        return m_amound_vertex_min_max;
+        return m_amount_vertex_min_max;
     }
-    public Vector2Int size_cell_array_getter()
+    public Vector2Int size_chunk_array_getter()
     {
-        return m_size_cell_array;
+        return m_size_chunk_array;
     }
-    public Vector3Int size_cell_getter()
+    public Vector2Int size_chunk_getter()
     {
-        return m_size_cell;
+        return m_size_chunk;
     }
-    public List<Cell> map_cells_getter()
+    public List<Chunk> map_chunk_getter()
     {
-        return map_cells;
+        return m_map_chunk;
     }
 
     //--Setters--
-    public void amound_vertex_min_maxsetter_setter(Vector2Int m_amound_vertex_min_max_)
+    public void amount_vertex_min_max_setter(Vector2Int m_amount_vertex_min_max_)
     {
-        m_amound_vertex_min_max = m_amound_vertex_min_max_;
+        m_amount_vertex_min_max = m_amount_vertex_min_max_;
     }
-    public void size_cell_array_setter(Vector2Int size_cell_array_)
+    public void size_chunk_array_setter(Vector2Int size_chunk_array_)
     {
-        m_size_cell_array = size_cell_array_;
+        m_size_chunk_array = size_chunk_array_;
     }
-    public void size_cell_setter(Vector3Int m_size_cell_)
+    public void size_chunk_setter(Vector2Int m_size_chunk_)
     {
-        m_size_cell = m_size_cell_;
+        m_size_chunk = m_size_chunk_;
     }
 }
 
-class Map_builder
+class String_Map_builder
 {
     string m_flor_symbol = "+";
-    Vector2Int m_amound_vertex_min_max;
-    Vector2Int m_size_cell_array;
-    Vector3Int m_size_cell;
+    Vector2Int m_amount_vertex_min_max;
+    Vector2Int m_size_chunk_array;
+    Vector2Int m_size_chunk;
 
-    List<Cell> m_cell_map;
+    List<Chunk> m_chunk_map;
     List<string> m_string_map;
 
 
 
-    public Map_builder(Vector2Int m_size_cell_array_, Vector3Int m_size_cell_, Vector2Int m_amound_vertex_min_max_)
+    public String_Map_builder(Vector2Int m_size_chunk_array_, Vector2Int m_size_chunk_, Vector2Int m_amount_vertex_min_max_)
     {
         //Ini Variables
-        m_size_cell_array = m_size_cell_array_;
-        m_size_cell = m_size_cell_;
-        m_amound_vertex_min_max = m_amound_vertex_min_max_;
+        m_size_chunk_array = m_size_chunk_array_;
+        m_size_chunk = m_size_chunk_;
+        m_amount_vertex_min_max = m_amount_vertex_min_max_;
 
-        Map_abstracter abst_map = new Map_abstracter(m_size_cell_array, m_size_cell, m_amound_vertex_min_max);
-        m_cell_map = abst_map.map_cells_getter();
+        Chunks_content_Manager abst_map = new Chunks_content_Manager(m_size_chunk_array, m_size_chunk, m_amount_vertex_min_max);
+        m_chunk_map = abst_map.map_chunk_getter();
 
         //build ini map
         m_string_map = build_string_map();
@@ -331,17 +323,17 @@ class Map_builder
 
     }
     //--Getters--
-    public Vector2Int amound_vertex_min_maxsetter_getter()
+    public Vector2Int amount_vertex_min_max_getter()
     {
-        return m_amound_vertex_min_max;
+        return m_amount_vertex_min_max;
     }
-    public Vector2Int size_cell_array_getter()
+    public Vector2Int size_chunk_array_getter()
     {
-        return m_size_cell_array;
+        return m_size_chunk_array;
     }
-    public Vector3Int size_cell_getter()
+    public Vector2Int size_chunk_getter()
     {
-        return m_size_cell;
+        return m_size_chunk;
     }
     public List<string> string_map_getter()
     {
@@ -349,98 +341,96 @@ class Map_builder
     }
 
     //--Setters--
-    public void amound_vertex_min_maxsetter_setter(Vector2Int m_amound_vertex_min_max_)
+    public void amount_vertex_min_max_setter(Vector2Int m_amount_vertex_min_max_)
     {
-        m_amound_vertex_min_max = m_amound_vertex_min_max_;
+        m_amount_vertex_min_max = m_amount_vertex_min_max_;
     }
-    public void size_cell_array_setter(Vector2Int size_cell_array_)
+    public void size_chunk_array_setter(Vector2Int size_chunk_array_)
     {
-        m_size_cell_array = size_cell_array_;
+        m_size_chunk_array = size_chunk_array_;
     }
-    public void size_cell_setter(Vector3Int m_size_cell_)
+    public void size_chunk_setter(Vector2Int m_size_chunk_)
     {
-        m_size_cell = m_size_cell_;
+        m_size_chunk = m_size_chunk_;
     }
 
-    //additional Funcions
+    //additional Functions
     public List<string> build_string_map() //memo at me: we need a better way to save maps...
     {
-        List<string> currend_string_map = new List<string>();
+        //-----convert to one string
+        List<string> current_string_map = new List<string>();
         //build a blank map
-        for (int y = 0; y < m_size_cell_array.y * m_size_cell.y; y++)
+        for (int y = 0; y < m_size_chunk_array.y * m_size_chunk.y; y++)
         {
-            for (int x = 0; x < m_size_cell_array.x * m_size_cell.x; x++)
+            for (int x = 0; x < m_size_chunk_array.x * m_size_chunk.x; x++)
             {
-                currend_string_map.Add(" ");
+                current_string_map.Add(" ");
             }
 
         }
 
         //fill map whit ways
-        //for everay cell
-        for (int array_y = 0; array_y < m_size_cell_array.y; array_y++)
+        //for every chunk
+        for (int array_y = 0; array_y < m_size_chunk_array.y; array_y++)
         {
-            for (int array_x = 0; array_x < m_size_cell_array.x; array_x++)
+            for (int array_x = 0; array_x < m_size_chunk_array.x; array_x++)
             {
-                Cell currend_cell = m_cell_map[array_x + array_y * m_size_cell_array.x];
-                int amound_of_points = currend_cell.vertex_cell_getter().Count;
-                Vertex_info last_vertex = new Vertex_info(new Vector3Int(-1, -1, -1), false, false);
+                Chunk current_chunk = m_chunk_map[array_x + array_y * m_size_chunk_array.x];
+                int amount_of_points = current_chunk.vertex_chunk_getter().Count;
+                Vertex last_vertex = new Vertex(new Vector2Int(-1, -1), false, false);
 
-                //for every point in cell
-                for (int i = 0; i < amound_of_points; i++)
+                //for every vertex in cell
+                for (int i = 0; i < amount_of_points; i++)
                 {
-                    Vertex_info currend_vertex = currend_cell.vertex_cell_getter()[i];
-                    Vector3Int currend_position = currend_vertex.m_position;
+                    Vertex current_vertex = current_chunk.vertex_chunk_getter()[i];
+                    Vector2Int current_position = current_vertex.m_position;
 
-                    //for every Neighbros
-                    for (int j = 0; j < currend_vertex.m_neighbors.Count; j++)
+                    //for every Neighbors
+                    for (int j = 0; j < current_vertex.m_neighbors.Count; j++)
                     {
-                        Vector3Int next_position = currend_vertex.m_neighbors[j].m_position;
+                        Vector2Int next_position = current_vertex.m_neighbors[j].m_position;
 
-                        //no skip dobbels
+                        //skip already processed Edges 
                         if (next_position != last_vertex.m_position)
                         {
-                            //filling the way left and rigth
-                            while (currend_position.x != next_position.x)
+                            //filling the way left and right
+                            while (current_position.x != next_position.x)
                             {
-                                currend_string_map[currend_position.x + currend_position.y * m_size_cell.x * m_size_cell_array.x] = m_flor_symbol;
+                                current_string_map[current_position.x + current_position.y * m_size_chunk.x * m_size_chunk_array.x] = m_flor_symbol;
                                 //it go´s left
-                                if ((next_position.x - currend_position.x) < 0)
+                                if ((next_position.x - current_position.x) < 0)
                                 {
-                                    currend_position.x -= 1;
+                                    current_position.x -= 1;
                                 }
-                                //it go´s rigth
-                                else if ((next_position.x - currend_position.x) > 0)
+                                //it go´s right
+                                else if ((next_position.x - current_position.x) > 0)
                                 {
-                                    currend_position.x += 1;
+                                    current_position.x += 1;
                                 }
                             }
                             //filling the way up and down
-                            while (currend_position.y != next_position.y)
+                            while (current_position.y != next_position.y)
                             {
-                                currend_string_map[currend_position.x + currend_position.y * m_size_cell.x * m_size_cell_array.x] = m_flor_symbol;
+                                current_string_map[current_position.x + current_position.y * m_size_chunk.x * m_size_chunk_array.x] = m_flor_symbol;
                                 //it go´s down
-                                if ((next_position.y - currend_position.y) < 0)
+                                if ((next_position.y - current_position.y) < 0)
                                 {
-                                    currend_position.y -= 1;
+                                    current_position.y -= 1;
                                 }
                                 //it go´s up 
-                                else if ((next_position.y - currend_position.y) > 0)
+                                else if ((next_position.y - current_position.y) > 0)
                                 {
-                                    currend_position.y += 1;
+                                    current_position.y += 1;
                                 }
                             }
                             //remember last vertex
-                            last_vertex = currend_vertex;
-                        }
-
-                    
+                            last_vertex = current_vertex;
+                        }                    
                     }
                 }
             }
-
         }
-        return currend_string_map;
+        return current_string_map;
     }
 }
 
@@ -450,36 +440,25 @@ public class LevelLayoutGenerator : LevelLayoutInitializer {
 
     // NOTE: Level coordinate (x = 0, y = 0) is the bottom left corner of the map.
 
-    public Vector2Int m_size_cell_array_ = new Vector2Int(2, 2);
-    public Vector3Int m_size_cell_ = new Vector3Int(10, 10, 0);
-    public Vector2Int m_amound_vertex_min_max_ = new Vector2Int(3, 6);
-    List<string> currend_map;
+    public Vector2Int m_size_chunk_array_ = new Vector2Int(2, 2);
+    public Vector2Int m_size_chunk_ = new Vector2Int(10, 10);
+    public Vector2Int m_amount_vertex_min_max_ = new Vector2Int(3, 6);
+    List<string> current_map;
 
     public override LevelLayout ProvideLevelLayout()
     {
-        /*
-        // Andis example
-        // BEGIN TEST - create simple level
-        string layoutString =
-            " + " +
-            "+++" +
-            "+ +";
-        int levelWidth = 3;
-        LevelLayout result = new LevelLayout(layoutString, levelWidth);
-        // END TEST - create simple level
-        */
+        String_Map_builder builder = new String_Map_builder(m_size_chunk_array_, m_size_chunk_, m_amount_vertex_min_max_);
+        current_map = builder.string_map_getter();
 
-        Map_builder builder = new Map_builder(m_size_cell_array_, m_size_cell_, m_amound_vertex_min_max_);
-        currend_map = builder.string_map_getter();
-
-        string layoutString = "";
+        string layout_String = "";
+        
         //convert List in to needed format
-        for (int i = 0; i < currend_map.Count; i++)
+        for (int i = 0; i < current_map.Count; i++)
         {
-            layoutString += currend_map[i];
+            layout_String += current_map[i];
         }
         //give result
-        LevelLayout result = new LevelLayout(layoutString, m_size_cell_array_.x * m_size_cell_.x);
+        LevelLayout result = new LevelLayout(layout_String, m_size_chunk_array_.x * m_size_chunk_.x);
 
         return result;
     }
