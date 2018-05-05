@@ -375,12 +375,12 @@ Prefab:
     - target: {fileID: 114629478833765208, guid: 73b8fed62baffe14b93a6a03172af6fd,
         type: 2}
       propertyPath: m_size_chunk_array_.x
-      value: 10
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 114629478833765208, guid: 73b8fed62baffe14b93a6a03172af6fd,
         type: 2}
       propertyPath: m_size_chunk_array_.y
-      value: 10
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 73b8fed62baffe14b93a6a03172af6fd, type: 2}
