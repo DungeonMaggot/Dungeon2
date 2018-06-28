@@ -1,0 +1,69 @@
+=============
+Audio Credits
+=============
+
+Audio File: Atmosphere Cave (Loop)
+Modified:   No
+URL:        https://freesound.org/people/julius_galla/sounds/232685/
+Author:     julius_galla
+License:    Attribution 3.0 Unported (CC BY 3.0)
+
+Audio File: Bloody Blade 2
+Modified:   Yes (slightly)
+URL:        https://freesound.org/people/Kreastricon62/sounds/323526/
+Author:     Kreastricon62
+License:    CC0 1.0 Universal (CC0 1.0) Public Domain Dedication 
+
+Audio File: Cyborg Hurt 1
+Modified:   Yes (slightly)
+URL:        https://freesound.org/people/scorpion67890/sounds/396804/
+Author:     scorpion67890
+License:    Attribution 3.0 Unported (CC BY 3.0)
+
+Audio File: Ghostly Breaths
+Modified:   Yes (slightly)
+URL:        https://freesound.org/people/RensvdMeijs/sounds/372869/
+Author:     RensvdMeijs
+License:    Attribution 3.0 Unported (CC BY 3.0)
+
+Audio File: Magic: Gargle Spell
+Modified:   No
+URL:        https://freesound.org/people/Spennnyyy/sounds/323502/
+Author:     Spennnyyy
+License:    CC0 1.0 Universal (CC0 1.0) Public Domain Dedication
+
+Audio File: Male_Hurt_04
+Modified:   No
+URL:        https://freesound.org/people/Artmasterrich/sounds/345436/
+Author:     Artmasterrich
+License:    CC0 1.0 Universal (CC0 1.0) Public Domain Dedication
+
+Audio File: male_hurt6.ogg
+Modified:   No
+URL:        https://freesound.org/people/micahlg/sounds/413184/
+Author:     micahlg
+License:    CC0 1.0 Universal (CC0 1.0) Public Domain Dedication 
+
+Audio File: male_hurt10.ogg
+Modified:   No
+URL:        https://freesound.org/people/micahlg/sounds/413175/
+Author:     micahlg
+License:    CC0 1.0 Universal (CC0 1.0) Public Domain Dedication
+
+Audio File: male_hurt12.ogg
+Modified:   No
+URL:        https://freesound.org/people/micahlg/sounds/413173/
+Author:     micahlg
+License:    CC0 1.0 Universal (CC0 1.0) Public Domain Dedication
+
+Audio File: swoosh.wav
+Modified:   No
+URL:        https://freesound.org/people/PorkMuncher/sounds/263595/
+Author:     PorkMuncher
+License:    CC0 1.0 Universal (CC0 1.0) Public Domain Dedication 
+
+Audio File: Walking on a concrete floor
+Modified:   Yes (slightly)
+URL:        https://freesound.org/people/AlexMurphy53/sounds/328459/
+Author:     AlexMurphy53
+License:    Attribution-NonCommercial 3.0 Unported (CC BY-NC 3.0)
