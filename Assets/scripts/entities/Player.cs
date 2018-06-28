@@ -17,6 +17,19 @@ public class Player : Character {
 
     }
 
+    public override void TakeDamage(int damage, Vector2Int damageDir, Vector2Int attackTilePos)
+    {
+        if (m_currentAction == EntityActions.Move && GetMoveTargetPos() != attackTilePos)
+        {
+            // special rule for the player: don't take damage if in the process of leaving attacked tile
+            return;
+        }
+        else
+        {
+            base.TakeDamage(damage, damageDir, attackTilePos);
+        }
+    }
+
     protected override void Dead()
     {
         Debug.Log("Player dead!");

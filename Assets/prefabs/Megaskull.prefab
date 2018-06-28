@@ -538,10 +538,17 @@ MonoBehaviour:
   m_WeaponMesh: {fileID: 1459126744739356}
   m_WeaponAttackTransform: {fileID: 4256522555930226}
   m_AudioSource: {fileID: 82460356112046080}
-  m_AttackSound1: {fileID: 8300000, guid: a54679174e39b8d46a08cd74587902e6, type: 3}
-  m_AttackSound2: {fileID: 8300000, guid: a8cd637ebe3fa2345b9a6fc33feada24, type: 3}
-  m_AttackSound3: {fileID: 8300000, guid: 40b154faff356fb43bd828006dde8aaf, type: 3}
-  m_DeathSound: {fileID: 8300000, guid: cbe7c31e7faaf384683d43ccda2f5e73, type: 3}
-  m_WalkSound: {fileID: 8300000, guid: 5efe128dfdc58b04189f5c823df97eec, type: 3}
+  m_AttackSound1: {fileID: 8300000, guid: d1fbdd9d9a04fa14983f9843361bd2a3, type: 3}
+  m_AttackSound2: {fileID: 8300000, guid: d1fbdd9d9a04fa14983f9843361bd2a3, type: 3}
+  m_AttackSound3: {fileID: 8300000, guid: d1fbdd9d9a04fa14983f9843361bd2a3, type: 3}
+  m_AttackSound4: {fileID: 8300000, guid: d1fbdd9d9a04fa14983f9843361bd2a3, type: 3}
+  m_DeathSound: {fileID: 8300000, guid: 476834147524fbe439d4261fded5e609, type: 3}
+  m_StepSound1: {fileID: 8300000, guid: 874221cb941d38047bc42c74fa03144b, type: 3}
+  m_StepSound2: {fileID: 8300000, guid: 9af9cc5297bbad44d91e7f4093665efe, type: 3}
+  m_StepSound3: {fileID: 8300000, guid: 2903638edcd931043b51960ce5fbdaa2, type: 3}
+  m_StepSound4: {fileID: 8300000, guid: 874221cb941d38047bc42c74fa03144b, type: 3}
+  m_TakeDamage1: {fileID: 8300000, guid: 27e010b3d89fa644a975630c39bb5271, type: 3}
+  m_TakeDamage2: {fileID: 8300000, guid: 27e010b3d89fa644a975630c39bb5271, type: 3}
+  m_TakeDamage3: {fileID: 8300000, guid: 27e010b3d89fa644a975630c39bb5271, type: 3}
   m_MegaskullMesh: {fileID: 1459126744739356}
   m_MegaskullCounterText: {fileID: 0}

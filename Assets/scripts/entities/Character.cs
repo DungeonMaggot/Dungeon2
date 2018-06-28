@@ -40,8 +40,15 @@ public abstract class Character : Entity
     [SerializeField] protected AudioClip m_AttackSound1;
     [SerializeField] protected AudioClip m_AttackSound2;
     [SerializeField] protected AudioClip m_AttackSound3;
+    [SerializeField] protected AudioClip m_AttackSound4;
     [SerializeField] protected AudioClip m_DeathSound;
-    [SerializeField] protected AudioClip m_WalkSound;
+    [SerializeField] protected AudioClip m_StepSound1;
+    [SerializeField] protected AudioClip m_StepSound2;
+    [SerializeField] protected AudioClip m_StepSound3;
+    [SerializeField] protected AudioClip m_StepSound4;
+    [SerializeField] protected AudioClip m_TakeDamage1;
+    [SerializeField] protected AudioClip m_TakeDamage2;
+    [SerializeField] protected AudioClip m_TakeDamage3;
 
     protected EntityActions m_currentAction = EntityActions.Idle;
     private Vector2Int m_moveTargetPos;
@@ -51,15 +58,35 @@ public abstract class Character : Entity
     protected Vector3 m_WeaponDefaultLocalPosition;
     protected Quaternion m_WeaponDefaultLocalRotation;
 
+    public Vector2Int GetMoveTargetPos()
+    {
+        return m_moveTargetPos;
+    }
+
     public bool IsAlive()
     {
         return (m_currentAction != EntityActions.Dead && m_currentAction != EntityActions.Die) ? true : false;
     }
 
-    public override void TakeDamage(int damage, Vector2Int damageDir)
+    public override void TakeDamage(int damage, Vector2Int damageDir, Vector2Int attackTilePos)
     {
         if (IsAlive())
         {
+            // "take damage" sound
+            float randomValue = Random.value;
+            if (randomValue >= 0.0f && randomValue < 0.33f)
+            {
+                m_AudioSource.PlayOneShot(m_TakeDamage1);
+            }
+            else if (randomValue >= 0.33f && randomValue < 0.66f)
+            {
+                m_AudioSource.PlayOneShot(m_TakeDamage2);
+            }
+            else
+            {
+                m_AudioSource.PlayOneShot(m_TakeDamage3);
+            }
+
             m_hitpoints -= damage;
             m_incomingDamageDir = damageDir;
             if (m_hitpoints <= 0)
@@ -115,7 +142,23 @@ public abstract class Character : Entity
             {
                 m_currentAction = EntityActions.Move;
                 m_actionTimer = m_moveSeconds;
-                m_AudioSource.PlayOneShot(m_WalkSound);
+                float randomValue = Random.value;
+                if (randomValue >= 0.0f && randomValue < 0.25f)
+                {
+                    m_AudioSource.PlayOneShot(m_StepSound1);
+                }
+                else if (randomValue >= 0.25f && randomValue < 0.50f)
+                {
+                    m_AudioSource.PlayOneShot(m_StepSound2);
+                }
+                else if (randomValue >= 0.50f && randomValue < 0.75f)
+                {
+                    m_AudioSource.PlayOneShot(m_StepSound3);
+                }
+                else
+                {
+                    m_AudioSource.PlayOneShot(m_StepSound4);
+                }
                 m_gameManagerReference.ReserveTilePos(this.gameObject, m_moveTargetPos);
             }
         }
@@ -159,17 +202,21 @@ public abstract class Character : Entity
             m_attackTargetTile = m_tilePos + m_facingDirection;
 
             float randomValue = Random.value;
-            if (randomValue >= 0.0f && randomValue < 0.33f)
+            if (randomValue >= 0.0f && randomValue < 0.25f)
             {
                 m_AudioSource.PlayOneShot(m_AttackSound1);
             }
-            if (randomValue >= 0.33f && randomValue < 0.66f)
+            else if (randomValue >= 0.25f && randomValue < 0.50f)
             {
                 m_AudioSource.PlayOneShot(m_AttackSound2);
             }
-            else
+            else if (randomValue >= 0.50f && randomValue < 0.75f)
             {
                 m_AudioSource.PlayOneShot(m_AttackSound3);
+            }
+            else
+            {
+                m_AudioSource.PlayOneShot(m_AttackSound4);
             }
         }
     }

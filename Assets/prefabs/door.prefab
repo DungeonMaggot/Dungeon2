@@ -82,7 +82,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1370684111409128}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 2.892182, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4439503919335302}
@@ -197,7 +197,9 @@ MonoBehaviour:
   m_gameManagerReference: {fileID: 0}
   m_tilePos: {x: 0, y: 0}
   m_facingDirection: {x: 0, y: 1}
-  m_doorMesh: {fileID: 1587377230032822}
+  m_doorMesh: {fileID: 100002, guid: af0ac07b7afd81b40b0ff03fe8b2230f, type: 3}
   m_doorOpenTransform: {fileID: 4680282519343488}
   m_moveSeconds: 1.5
   m_passableThreshold: 0.5
+  m_AudioSource: {fileID: 0}
+  m_DoorSound: {fileID: 8300000, guid: d879ed29226eaca4abb8cb100bc6875c, type: 3}

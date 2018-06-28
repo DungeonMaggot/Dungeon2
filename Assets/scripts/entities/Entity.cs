@@ -35,7 +35,7 @@ public abstract class Entity : MonoBehaviour {
         }
     }
 
-    public virtual void TakeDamage(int damage, Vector2Int damageDir)
+    public virtual void TakeDamage(int damage, Vector2Int damageDir, Vector2Int attackTilePos)
     {
         // does nothing by default
     }

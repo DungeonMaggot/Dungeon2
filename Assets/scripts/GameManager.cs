@@ -157,7 +157,7 @@ public class GameManager : MonoBehaviour {
             Entity entity = m_entities[entityIndex].GetComponent(typeof(Entity)) as Entity;
             if (attackTilePos == entity.GetTilePosition())
             {
-                entity.TakeDamage(hitpoints, attackDir);
+                entity.TakeDamage(hitpoints, attackDir, attackTilePos);
             }
         }
     }

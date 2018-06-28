@@ -14,6 +14,8 @@ public class Door : Entity {
     [SerializeField] protected Transform m_doorOpenTransform;
     [SerializeField] protected float m_moveSeconds;
     [SerializeField] protected float m_passableThreshold;
+    [SerializeField] protected AudioSource m_AudioSource;
+    [SerializeField] protected AudioClip m_DoorSound;
 
     protected Vector3 m_doorOpenLocalPos;
     protected Vector3 m_doorClosedLocalPos;
@@ -63,6 +65,7 @@ public class Door : Entity {
                 Open();
             }
         }
+        /*
         else
         {
             if (m_doorMovement == DoorMovement.Opening)
@@ -74,6 +77,7 @@ public class Door : Entity {
                 Open();
             }
         }
+        */
     }
 
     public void BeginMove(DoorMovement desiredMovement)
@@ -84,6 +88,8 @@ public class Door : Entity {
         }
         else if(desiredMovement != m_doorMovement)
         {
+            m_AudioSource.PlayOneShot(m_DoorSound);
+
             if(desiredMovement == DoorMovement.Opening)
             {
                 m_actionTimer = (1.0f - m_open) * m_moveSeconds;
